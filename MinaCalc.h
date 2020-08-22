@@ -1,5 +1,5 @@
 #pragma once
-#include "../Models/NoteData/NoteDataStructures.h"
+#include "parent_files/NoteDataStructures.h"
 #include <string>
 #include <vector>
 #include <array>

@@ -1,11 +1,13 @@
 #pragma once
 
 // stepmania garbage
-#include "../FileTypes/XmlFile.h"
-#include "../FileTypes/XmlFileUtil.h"
-#include "RageUtil/File/RageFile.h"
-#include "RageUtil/File/RageFileManager.h"
-#include "RageUtil/Utils/RageUtil.h"
+//#include "../FileTypes/XmlFile.h"
+//#include "../FileTypes/XmlFileUtil.h"
+//#include "RageUtil/File/RageFile.h"
+//#include "RageUtil/File/RageFileManager.h"
+//#include "RageUtil/Utils/RageUtil.h"
+#include <cstring>
+#include <memory>
 
 // hand agnostic data structures/functions
 #include "Agnostic/MetaRowInfo.h"
