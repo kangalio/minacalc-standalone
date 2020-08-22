@@ -888,10 +888,10 @@ MinaSDCalcDebug(
 	handInfo.emplace_back(calc.debugValues.at(right_hand));
 
 	// asdkfhjasdkfhaskdfjhasfd
-	if (!DoesFileExist(calc_params_xml)) {
-		const TheGreatBazoinkazoinkInTheSky ublov(calc);
-		ublov.write_params_to_disk();
-	}
+	//~ if (!DoesFileExist(calc_params_xml)) {
+		//~ const TheGreatBazoinkazoinkInTheSky ublov(calc);
+		//~ ublov.write_params_to_disk();
+	//~ }
 }
 
 int mina_calc_version = 434;
