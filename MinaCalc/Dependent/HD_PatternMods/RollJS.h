@@ -2,17 +2,17 @@
 #include "../IntervalHandInfo.h"
 #include "../HD_Sequencers/GenericSequencing.h"
 
-struct RollMod
+struct RollJSMod
 {
-	const CalcPatternMod _pmod = Roll;
-	const std::string name = "RollMod";
+	const CalcPatternMod _pmod = RollJS;
+	const std::string name = "RollJSMod";
 
 #pragma region params
 
 	float min_mod = 0.85F;
 	float max_mod = 1.F;
 	float base = 0.1F;
-	float jj_scaler = 2.5F;
+	float jj_scaler = 2.F;
 
 	// ms apart for 2 taps to be considered a jumpjack
 	// 0.075 is 200 bpm 16th trills

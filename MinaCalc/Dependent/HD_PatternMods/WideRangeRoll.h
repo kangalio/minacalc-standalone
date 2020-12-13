@@ -1,7 +1,10 @@
 #pragma once
 #include "../IntervalHandInfo.h"
 
-// ok new plan we will incloop the joomp
+/// Hand-Dependent PatternMod detecting continuous rolls.
+/// Lenient in a particular way to detect patterns that are
+/// mostly jumptrilly.
+/// ok new plan we will incloop the joomp
 struct WideRangeRollMod
 {
 	const CalcPatternMod _pmod = WideRangeRoll;
@@ -80,7 +83,7 @@ struct WideRangeRollMod
 	void setup()
 	{
 		window =
-		  CalcClamp(static_cast<int>(window_param), 1, max_moving_window_size);
+		  std::clamp(static_cast<int>(window_param), 1, max_moving_window_size);
 	}
 
 #pragma endregion
@@ -152,7 +155,7 @@ struct WideRangeRollMod
 
 	void handle_roll_timing_check()
 	{
-		if (seq_ms[1] > seq_ms[0]) {
+		if (any_ms_is_greater(seq_ms[1], seq_ms[0])) {
 			zoop_the_woop(1, 2.5F);
 		} else {
 			seq_ms[0] /= 2.5F;
@@ -337,7 +340,7 @@ struct WideRangeRollMod
 						   _mw_max.get_total_for_windowf(window);
 
 		pmod *= zomg;
-		pmod = CalcClamp(base + fastsqrt(pmod), min_mod, max_mod);
+		pmod = std::clamp(base + fastsqrt(pmod), min_mod, max_mod);
 	}
 
 	auto operator()(const ItvHandInfo& itvhi) -> float

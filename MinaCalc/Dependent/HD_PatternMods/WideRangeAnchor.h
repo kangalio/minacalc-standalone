@@ -2,7 +2,8 @@
 #include "../IntervalHandInfo.h"
 #include "../HD_Sequencers/GenericSequencing.h"
 
-// general mod, should maybe make cj specific one
+/// Hand-Dependent PatternMod detecting anchors in general.
+/// general mod, should maybe make cj specific one
 struct WideRangeAnchorMod
 {
 	const CalcPatternMod _pmod = WideRangeAnchor;
@@ -13,12 +14,12 @@ struct WideRangeAnchorMod
 	float window_param = 2.F;
 
 	float min_mod = 1.F;
-	float max_mod = 1.05F;
+	float max_mod = 1.1F;
 	float base = 1.F;
 
 	float diff_min = 4.F;
-	float diff_max = 8.F;
-	float scaler = 0.1F;
+	float diff_max = 16.F;
+	float scaler = 0.5F;
 
 	const std::vector<std::pair<std::string, float*>> _params{
 		{ "window_param", &window_param },
@@ -52,7 +53,7 @@ struct WideRangeAnchorMod
 	{
 		// setup should be run after loading params from disk
 		window =
-		  CalcClamp(static_cast<int>(window_param), 1, max_moving_window_size);
+		  std::clamp(static_cast<int>(window_param), 1, max_moving_window_size);
 		divisor = static_cast<float>(static_cast<int>(diff_max) -
 									 static_cast<int>(diff_min));
 
@@ -94,7 +95,7 @@ struct WideRangeAnchorMod
 
 		pmod =
 		  base + (scaler * ((static_cast<float>(diff) - diff_min) / divisor));
-		pmod = CalcClamp(pmod, min_mod, max_mod);
+		pmod = std::clamp(pmod, min_mod, max_mod);
 	}
 
 	auto operator()(const ItvHandInfo& itvhi, const AnchorSequencer& as)

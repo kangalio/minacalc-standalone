@@ -4,22 +4,22 @@
 /// Hand-Agnostic PatternMod describing chord density.
 /// Forms a value based on counts of chords of different sizes
 /// relative to the number of notes in the interval
-struct CJDensityMod
+struct HSDensityMod
 {
-	const CalcPatternMod _pmod = CJDensity;
-	const std::string name = "CJDensityMod";
+	const CalcPatternMod _pmod = HSDensity;
+	const std::string name = "HSDensityMod";
 	const int _tap_size = quad;
 
 #pragma region params
 
-	float min_mod = 0.98F;
+	float min_mod = 1.F;
 	float max_mod = 1.F;
 	float base = 0.F;
 
-	float single_scaler = 1.F;
-	float jump_scaler = 1.25F;
-	float hand_scaler = 0.9F;
-	float quad_scaler = 1.15F;
+	float single_scaler = 2.F;
+	float jump_scaler = 1.2F;
+	float hand_scaler = 0.95F;
+	float quad_scaler = 0.95F;
 
 	const std::vector<std::pair<std::string, float*>> _params{
 		{ "min_mod", &min_mod },

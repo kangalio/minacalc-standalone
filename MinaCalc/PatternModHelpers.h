@@ -5,13 +5,12 @@
 #include <algorithm>
 #include <xmmintrin.h>
 #include <numeric>
-#include <cstring>
 
 /* generic pattern mod functions and defs to help either agnostic or dependent
  * mods do their stuff */
-static const float neutral = 1.F;
+constexpr float neutral = 1.F;
 
-// Relies on endiannes (significantly inaccurate)
+/// Relies on endiannes (significantly inaccurate)
 inline auto
 fastpow(double a, double b) -> float
 {
@@ -23,7 +22,7 @@ fastpow(double a, double b) -> float
 	return static_cast<float>(a);
 }
 
-// not super accurate, good enough for our purposes
+/// not super accurate, good enough for our purposes
 inline auto
 fastsqrt(float _in) -> float
 {
@@ -63,11 +62,73 @@ cv(const std::vector<float>& input) -> float
 	return fastsqrt(sd / static_cast<float>(input.size())) / average;
 }
 
-template<typename T>
-auto
-CalcClamp(T x, T l, T h) -> T
+// cv of a vector truncated to a set number of values, or if below, filled with
+// dummy values to reach the desired num_vals
+inline auto
+cv_trunc_fill(const std::vector<float>& input,
+			  const int& num_vals,
+			  const float& ms_dummy) -> float
 {
-	return x > h ? h : (x < l ? l : x);
+	int input_sz = static_cast<int>(input.size());
+	float sd = 0.F;
+	float average = 0.F;
+	if (input_sz >= num_vals) {
+		for (int i = 0; i < std::min(input_sz, num_vals); ++i) {
+			average += input[i];
+		}
+		average /= static_cast<float>(num_vals);
+
+		for (int i = 0; i < std::min(input_sz, num_vals); ++i) {
+			sd += (input[i] - average) * (input[i] - average);
+		}
+
+		return fastsqrt(sd / static_cast<float>(num_vals)) / average;
+	}
+
+	for (int i = 0; i < std::min(input_sz, num_vals); ++i) {
+		average += input[i];
+	}
+
+	// fill with dummies if input is below desired number of values
+	for (int i = 0; i < num_vals - input_sz; ++i) {
+		average += ms_dummy;
+	}
+	average /= static_cast<float>(num_vals);
+
+	for (int i = 0; i < std::min(input_sz, num_vals); ++i) {
+		sd += (input[i] - average) * (input[i] - average);
+	}
+
+	for (int i = 0; i < num_vals - input_sz; ++i) {
+		sd += (ms_dummy - average) * (ms_dummy - average);
+	}
+
+	return fastsqrt(sd / static_cast<float>(num_vals)) / average;
+}
+
+inline auto
+sum_trunc_fill(const std::vector<float>& input,
+			   const int& num_vals,
+			   const float& ms_dummy) -> float
+{
+	int input_sz = static_cast<int>(input.size());
+	float sum = 0.F;
+	// use up to num_vals
+	for (int i = 0; i < std::min(input_sz, num_vals); ++i) {
+		sum += input[i];
+	}
+
+	// got enough
+	if (input_sz >= num_vals) {
+		return sum;
+	}
+
+	// fill with dummies if input is below desired number of values
+	for (int i = 0; i < num_vals - static_cast<int>(input_sz); ++i) {
+		sum += ms_dummy;
+	}
+
+	return sum;
 }
 
 inline auto
@@ -102,4 +163,10 @@ weighted_average(const float& a, const float& b, const float& x, const float& y)
   -> float
 {
 	return (x * a + ((y - x) * b)) / y;
+}
+
+inline auto
+lerp(float t, float a, float b) -> float
+{
+	return (1.F - t)*a + t*b;
 }
