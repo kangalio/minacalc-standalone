@@ -11,3 +11,15 @@ The following commands assume GCC and Linux. Adjust the commands to your platfor
     - If the C API is not needed, omit API.cpp: <br/>
       `g++ -std=c++17 -O2 -static -c MinaCalc.cpp`
 2. Link the object files together into a library: `ar rcs libminacalc.a *.o`
+
+# Example usage
+```c
+#include <stdio.h>
+#include "API.h"
+
+int main() {
+    printf("calc version: %d\n", calc_version());
+}
+```
+
+Run with `gcc -lstdc++ -lm main.c libminacalc.a && ./a.out` (or equivalent for your platform and compiler)
