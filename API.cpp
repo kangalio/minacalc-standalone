@@ -1,4 +1,4 @@
-#include "MinaCalc.h"
+#include "MinaCalc/MinaCalc.h"
 
 extern "C" {
 	#include "API.h"

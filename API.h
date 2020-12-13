@@ -1,5 +1,5 @@
 // This is a C++ style header file, so we have to do the typedef below to have NoteInfo accessible
-#include "parent_files/NoteDataStructures.h"
+#include "NoteDataStructures.h"
 typedef struct NoteInfo NoteInfo;
 
 typedef struct CalcHandle {} CalcHandle;

@@ -1,13 +1,11 @@
 #pragma once
 
 // stepmania garbage
-//#include "../FileTypes/XmlFile.h"
-//#include "../FileTypes/XmlFileUtil.h"
-//#include "RageUtil/File/RageFile.h"
-//#include "RageUtil/File/RageFileManager.h"
-//#include "RageUtil/Utils/RageUtil.h"
-#include <cstring>
-#include <memory>
+#include "../FileTypes/XmlFile.h"
+#include "../FileTypes/XmlFileUtil.h"
+#include "RageUtil/File/RageFile.h"
+#include "RageUtil/File/RageFileManager.h"
+#include "RageUtil/Utils/RageUtil.h"
 
 // hand agnostic data structures/functions
 #include "Agnostic/MetaRowInfo.h"
@@ -121,9 +119,9 @@ struct TheGreatBazoinkazoinkInTheSky
 		 * we have to write out after loading the values player defined, so the
 		 * quick hack solution to do that is to only do it during debug output
 		 * generation, which is fine for the time being, though not ideal */
-		//~ if (calc.debugmode) {
-			//~ write_params_to_disk();
-		//~ }
+		if (calc.debugmode) {
+			write_params_to_disk();
+		}
 
 		// setup our data pointers
 		_last_mri = std::make_unique<metaRowInfo>();
@@ -447,122 +445,122 @@ struct TheGreatBazoinkazoinkInTheSky
 	}
 #pragma endregion
 
-	//~ [[nodiscard]] static auto make_mod_param_node(
-	  //~ const std::vector<std::pair<std::string, float*>>& param_map,
-	  //~ const std::string& name) -> XNode*
-	//~ {
-		//~ auto* pmod = new XNode(name);
-		//~ for (const auto& p : param_map) {
-			//~ pmod->AppendChild(p.first, std::to_string(*p.second));
-		//~ }
+	[[nodiscard]] static auto make_mod_param_node(
+	  const std::vector<std::pair<std::string, float*>>& param_map,
+	  const std::string& name) -> XNode*
+	{
+		auto* pmod = new XNode(name);
+		for (const auto& p : param_map) {
+			pmod->AppendChild(p.first, std::to_string(*p.second));
+		}
 
-		//~ return pmod;
-	//~ }
+		return pmod;
+	}
 
-	//~ static void load_params_for_mod(
-	  //~ const XNode* node,
-	  //~ const std::vector<std::pair<std::string, float*>>& param_map,
-	  //~ const std::string& name)
-	//~ {
-		//~ auto boat = 0.F;
-		//~ const auto* pmod = node->GetChild(name);
-		//~ if (pmod == nullptr) {
-			//~ return;
-		//~ }
-		//~ for (const auto& p : param_map) {
-			//~ const auto* ch = pmod->GetChild(p.first);
-			//~ if (ch == nullptr) {
-				//~ continue;
-			//~ }
+	static void load_params_for_mod(
+	  const XNode* node,
+	  const std::vector<std::pair<std::string, float*>>& param_map,
+	  const std::string& name)
+	{
+		auto boat = 0.F;
+		const auto* pmod = node->GetChild(name);
+		if (pmod == nullptr) {
+			return;
+		}
+		for (const auto& p : param_map) {
+			const auto* ch = pmod->GetChild(p.first);
+			if (ch == nullptr) {
+				continue;
+			}
 
-			//~ ch->GetTextValue(boat);
-			//~ *p.second = boat;
-		//~ }
-	//~ }
+			ch->GetTextValue(boat);
+			*p.second = boat;
+		}
+	}
 
-	//~ void load_calc_params_from_disk() const
-	//~ {
-		//~ const auto fn = calc_params_xml;
-		//~ int iError;
-		//~ const std::unique_ptr<RageFileBasic> pFile(
-		  //~ FILEMAN->Open(fn, RageFile::READ, iError));
-		//~ if (pFile == nullptr) {
-			//~ return;
-		//~ }
+	void load_calc_params_from_disk() const
+	{
+		const auto fn = calc_params_xml;
+		int iError;
+		const std::unique_ptr<RageFileBasic> pFile(
+		  FILEMAN->Open(fn, RageFile::READ, iError));
+		if (pFile == nullptr) {
+			return;
+		}
 
-		//~ XNode params;
-		//~ if (!XmlFileUtil::LoadFromFileShowErrors(params, *pFile)) {
-			//~ return;
-		//~ }
+		XNode params;
+		if (!XmlFileUtil::LoadFromFileShowErrors(params, *pFile)) {
+			return;
+		}
 
-		//~ // ignore params from older versions
-		//~ std::string vers;
-		//~ params.GetAttrValue("vers", vers);
-		//~ if (vers.empty() || stoi(vers) != GetCalcVersion()) {
-			//~ return;
-		//~ }
+		// ignore params from older versions
+		std::string vers;
+		params.GetAttrValue("vers", vers);
+		if (vers.empty() || stoi(vers) != GetCalcVersion()) {
+			return;
+		}
 
-		//~ load_params_for_mod(&params, _s._params, _s.name);
-		//~ load_params_for_mod(&params, _js._params, _js.name);
-		//~ load_params_for_mod(&params, _hs._params, _hs.name);
-		//~ load_params_for_mod(&params, _cj._params, _cj.name);
-		//~ load_params_for_mod(&params, _cjd._params, _cjd.name);
-		//~ load_params_for_mod(&params, _ohj._params, _ohj.name);
-		//~ load_params_for_mod(&params, _cjohj._params, _cjohj.name);
-		//~ load_params_for_mod(&params, _bal._params, _bal.name);
-		//~ load_params_for_mod(&params, _oht._params, _oht.name);
-		//~ load_params_for_mod(&params, _voht._params, _voht.name);
-		//~ load_params_for_mod(&params, _ch._params, _ch.name);
-		//~ load_params_for_mod(&params, _rm._params, _rm.name);
-		//~ load_params_for_mod(&params, _wrb._params, _wrb.name);
-		//~ load_params_for_mod(&params, _wrr._params, _wrr.name);
-		//~ load_params_for_mod(&params, _wrjt._params, _wrjt.name);
-		//~ load_params_for_mod(&params, _wra._params, _wra.name);
-		//~ load_params_for_mod(&params, _fj._params, _fj.name);
-		//~ load_params_for_mod(&params, _tt._params, _tt.name);
-		//~ load_params_for_mod(&params, _tt2._params, _tt2.name);
-	//~ }
+		load_params_for_mod(&params, _s._params, _s.name);
+		load_params_for_mod(&params, _js._params, _js.name);
+		load_params_for_mod(&params, _hs._params, _hs.name);
+		load_params_for_mod(&params, _cj._params, _cj.name);
+		load_params_for_mod(&params, _cjd._params, _cjd.name);
+		load_params_for_mod(&params, _ohj._params, _ohj.name);
+		load_params_for_mod(&params, _cjohj._params, _cjohj.name);
+		load_params_for_mod(&params, _bal._params, _bal.name);
+		load_params_for_mod(&params, _oht._params, _oht.name);
+		load_params_for_mod(&params, _voht._params, _voht.name);
+		load_params_for_mod(&params, _ch._params, _ch.name);
+		load_params_for_mod(&params, _rm._params, _rm.name);
+		load_params_for_mod(&params, _wrb._params, _wrb.name);
+		load_params_for_mod(&params, _wrr._params, _wrr.name);
+		load_params_for_mod(&params, _wrjt._params, _wrjt.name);
+		load_params_for_mod(&params, _wra._params, _wra.name);
+		load_params_for_mod(&params, _fj._params, _fj.name);
+		load_params_for_mod(&params, _tt._params, _tt.name);
+		load_params_for_mod(&params, _tt2._params, _tt2.name);
+	}
 
-	//~ [[nodiscard]] auto make_param_node() const -> XNode*
-	//~ {
-		//~ auto* calcparams = new XNode("CalcParams");
-		//~ calcparams->AppendAttr("vers", GetCalcVersion());
+	[[nodiscard]] auto make_param_node() const -> XNode*
+	{
+		auto* calcparams = new XNode("CalcParams");
+		calcparams->AppendAttr("vers", GetCalcVersion());
 
-		//~ calcparams->AppendChild(make_mod_param_node(_s._params, _s.name));
-		//~ calcparams->AppendChild(make_mod_param_node(_js._params, _js.name));
-		//~ calcparams->AppendChild(make_mod_param_node(_hs._params, _hs.name));
-		//~ calcparams->AppendChild(make_mod_param_node(_cj._params, _cj.name));
-		//~ calcparams->AppendChild(make_mod_param_node(_cjd._params, _cjd.name));
-		//~ calcparams->AppendChild(make_mod_param_node(_ohj._params, _ohj.name));
-		//~ calcparams->AppendChild(
-		  //~ make_mod_param_node(_cjohj._params, _cjohj.name));
-		//~ calcparams->AppendChild(make_mod_param_node(_bal._params, _bal.name));
-		//~ calcparams->AppendChild(make_mod_param_node(_oht._params, _oht.name));
-		//~ calcparams->AppendChild(make_mod_param_node(_voht._params, _voht.name));
-		//~ calcparams->AppendChild(make_mod_param_node(_ch._params, _ch.name));
-		//~ calcparams->AppendChild(make_mod_param_node(_rm._params, _rm.name));
-		//~ calcparams->AppendChild(make_mod_param_node(_wrb._params, _wrb.name));
-		//~ calcparams->AppendChild(make_mod_param_node(_wrr._params, _wrr.name));
-		//~ calcparams->AppendChild(make_mod_param_node(_wrjt._params, _wrjt.name));
-		//~ calcparams->AppendChild(make_mod_param_node(_wra._params, _wra.name));
-		//~ calcparams->AppendChild(make_mod_param_node(_fj._params, _fj.name));
-		//~ calcparams->AppendChild(make_mod_param_node(_tt._params, _tt.name));
-		//~ calcparams->AppendChild(make_mod_param_node(_tt2._params, _tt2.name));
+		calcparams->AppendChild(make_mod_param_node(_s._params, _s.name));
+		calcparams->AppendChild(make_mod_param_node(_js._params, _js.name));
+		calcparams->AppendChild(make_mod_param_node(_hs._params, _hs.name));
+		calcparams->AppendChild(make_mod_param_node(_cj._params, _cj.name));
+		calcparams->AppendChild(make_mod_param_node(_cjd._params, _cjd.name));
+		calcparams->AppendChild(make_mod_param_node(_ohj._params, _ohj.name));
+		calcparams->AppendChild(
+		  make_mod_param_node(_cjohj._params, _cjohj.name));
+		calcparams->AppendChild(make_mod_param_node(_bal._params, _bal.name));
+		calcparams->AppendChild(make_mod_param_node(_oht._params, _oht.name));
+		calcparams->AppendChild(make_mod_param_node(_voht._params, _voht.name));
+		calcparams->AppendChild(make_mod_param_node(_ch._params, _ch.name));
+		calcparams->AppendChild(make_mod_param_node(_rm._params, _rm.name));
+		calcparams->AppendChild(make_mod_param_node(_wrb._params, _wrb.name));
+		calcparams->AppendChild(make_mod_param_node(_wrr._params, _wrr.name));
+		calcparams->AppendChild(make_mod_param_node(_wrjt._params, _wrjt.name));
+		calcparams->AppendChild(make_mod_param_node(_wra._params, _wra.name));
+		calcparams->AppendChild(make_mod_param_node(_fj._params, _fj.name));
+		calcparams->AppendChild(make_mod_param_node(_tt._params, _tt.name));
+		calcparams->AppendChild(make_mod_param_node(_tt2._params, _tt2.name));
 
-		//~ return calcparams;
-	//~ }
-//~ #pragma endregion
+		return calcparams;
+	}
+#pragma endregion
 
-	//~ void write_params_to_disk() const
-	//~ {
-		//~ const auto fn = calc_params_xml;
-		//~ const std::unique_ptr<XNode> xml(make_param_node());
+	void write_params_to_disk() const
+	{
+		const auto fn = calc_params_xml;
+		const std::unique_ptr<XNode> xml(make_param_node());
 
-		//~ std::string err;
-		//~ RageFile f;
-		//~ if (!f.Open(fn, RageFile::WRITE)) {
-			//~ return;
-		//~ }
-		//~ XmlFileUtil::SaveToFile(xml.get(), f, "", false);
-	//~ }
+		std::string err;
+		RageFile f;
+		if (!f.Open(fn, RageFile::WRITE)) {
+			return;
+		}
+		XmlFileUtil::SaveToFile(xml.get(), f, "", false);
+	}
 };
