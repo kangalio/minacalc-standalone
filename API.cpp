@@ -23,14 +23,14 @@ extern "C" {
 	extern "C++" Ssr skillset_vector_to_ssr(std::vector<float> &skillsets) {
 		//assert(skillsets.size() == NUM_Skillset);
 		return Ssr {
-			.overall = skillsets[Skill_Overall],
-			.stream = skillsets[Skill_Stream],
-			.jumpstream = skillsets[Skill_Jumpstream],
-			.handstream = skillsets[Skill_Handstream],
-			.stamina = skillsets[Skill_Stamina],
-			.jackspeed = skillsets[Skill_JackSpeed],
-			.chordjack = skillsets[Skill_Chordjack],
-			.technical = skillsets[Skill_Technical],
+			skillsets[Skill_Overall],
+			skillsets[Skill_Stream],
+			skillsets[Skill_Jumpstream],
+			skillsets[Skill_Handstream],
+			skillsets[Skill_Stamina],
+			skillsets[Skill_JackSpeed],
+			skillsets[Skill_Chordjack],
+			skillsets[Skill_Technical],
 		};
 	}
 
