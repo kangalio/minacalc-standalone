@@ -1,25 +1,9 @@
 #include "MinaCalc.h"
 
 extern "C" {
-	struct CalcHandle;
+	#include "API.h"
 
-	struct Ssr {
-		float overall;
-		float stream;
-		float jumpstream;
-		float handstream;
-		float stamina;
-		float jackspeed;
-		float chordjack;
-		float technical;
-	};
-
-	struct MsdForAllRates {
-		// one for each full-rate from 0.7 to 2.0 inclusive
-		Ssr msds[14];
-	};
-
-	// internal utility function
+	// internal utility function for C <-> C++ bridging
 	extern "C++" Ssr skillset_vector_to_ssr(std::vector<float> &skillsets) {
 		//assert(skillsets.size() == NUM_Skillset);
 		return Ssr {
