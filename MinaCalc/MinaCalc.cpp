@@ -9,6 +9,7 @@
 #include <string>
 #include <utility>
 #include <cassert>
+#include <sstream>
 
 using std::max;
 using std::min;
@@ -477,10 +478,6 @@ Calc::InitializeHands(const std::vector<NoteInfo>& NoteInfo,
 	// (mostly patternmods)
 	thread_local TheGreatBazoinkazoinkInTheSky ulbu_that_which_consumes_all(
 	  *this);
-
-	// if debug, force params to load
-	if (debugmode || loadparams)
-		ulbu_that_which_consumes_all.load_calc_params_from_disk(true);
 
 	// reset ulbu patternmod structs
 	// run agnostic patternmod/sequence loop
@@ -1004,16 +1001,6 @@ MinaSDCalcDebug(
 
 	handInfo.emplace_back(calc.debugValues.at(left_hand));
 	handInfo.emplace_back(calc.debugValues.at(right_hand));
-
-	/* ok so the problem atm is the multithreading of songload, if we want
-	 * to update the file on disk with new values and not just overwrite it
-	 * we have to write out after loading the values player defined, so the
-	 * quick hack solution to do that is to only do it during debug output
-	 * generation, which is fine for the time being, though not ideal */
-	if (!DoesFileExist(calc_params_xml)) {
-		const TheGreatBazoinkazoinkInTheSky ublov(calc);
-		ublov.write_params_to_disk();
-	}
 }
 
 int mina_calc_version = 505;

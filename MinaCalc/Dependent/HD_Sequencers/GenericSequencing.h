@@ -1,5 +1,6 @@
 #pragma once
 #include "../../CalcWindow.h"
+#include <cmath>
 
 /* Contains generic sequencers passed to metahandinfo to be advanced in the row
  * loop */
